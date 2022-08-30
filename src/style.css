@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Corben&display=swap');
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #101728;
+  font-family: 'Corben', cursive, sans-serif;
+  color: #fff;
+}
+
+header {
+  display: flex;
+  border: 2px white solid;
+}
+
+section {
+  display: flex;
+  align-items: flex-start;
+  border: 2px white solid;
+}
+
+div {
+  border: 2px white solid;
+  flex: 1;
+}
+
+h2 {
+  color: #9340ff;
+}
+
+footer h2,
+p {
+  text-align: center;
+}
+
+#category-container {
+  display: flex;
+  justify-content: space-around;
+}

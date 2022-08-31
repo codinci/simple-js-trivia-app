@@ -11,27 +11,47 @@ body {
 
 header {
   display: flex;
-  border: 2px white solid;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 section {
   display: flex;
-  align-items: flex-start;
-  border: 2px white solid;
+  justify-content: center;
+  align-items: center;
 }
 
 div {
-  border: 2px white solid;
   flex: 1;
 }
 
 h2 {
+  font-size: 2rem;
   color: #9340ff;
 }
 
 footer h2,
 p {
   text-align: center;
+}
+
+p {
+  font-size: 1.5rem;
+}
+
+header >h1 {
+  padding-left: .25em;
+}
+
+button {
+  padding: 1em 4.5em;
+  background-image: linear-gradient(to right, #1D2B64, #F8CDDA);
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.home_page h1 {
+  font-size: 3.0rem;
 }
 
 #category-container {

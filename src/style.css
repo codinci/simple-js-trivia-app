@@ -30,8 +30,7 @@ h2 {
   color: #9340ff;
 }
 
-footer h2,
-p {
+footer h2, p {
   text-align: center;
 }
 
@@ -39,22 +38,39 @@ p {
   font-size: 1.5rem;
 }
 
-header >h1 {
-  padding-left: .25em;
+header h1 {
+  padding-left: .5em;
 }
 
 button {
   padding: 1em 4.5em;
-  background-image: linear-gradient(to right, #1D2B64, #F8CDDA);
+  background-image: linear-gradient(to right, #9b3ef1, #dc3a8e);
   border-radius: 10px;
   font-size: 1rem;
 }
 
 .home_page h1 {
   font-size: 3.0rem;
+  text-align: center;
 }
 
 #category-container {
   display: flex;
   justify-content: space-around;
+}
+
+@media (max-width: 650px) {
+  .home_page h1 {
+      font-size: 2rem;
+      text-align: center;
+  }
+
+  #category-container {
+      display: flex;
+      flex-direction: column;
+  }
+
+  button {
+    margin: 5px;
+  }
 }

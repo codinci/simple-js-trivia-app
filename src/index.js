@@ -1,18 +1,3 @@
-// console.log('I can see the index.js');
-// const category = [
-//   {
-//     name: 'Science: Computers',
-//     id: 18
-//   },
-//   {
-//     name: 'General Knowledge',
-//     id: 9
-//   },
-//   {
-//     name: 'Entertainment: Video Games',
-//     id: 15
-//   }
-// ]
 const question = document.getElementById('quiz_question');
 const score = document.getElementById('correct-score');
 const noOfQuestions = document.getElementById('total-questions');
@@ -21,16 +6,19 @@ const replay = document.getElementById('play-again');
 const quizOptions = document.querySelector('.quiz-options');
 const result = document.getElementById('result');
 const gameButtons = document.querySelectorAll('#category-container button');
+const next = document.getElementById('next');
 
 let correctAnswer = "";
-let correctScore = askedCount = 0;
+let correctScore = 0;
 let totalQuestions = 10;
+
 
 function eventListeners() {
   Array.from(gameButtons).forEach(gameButton => {
     gameButton.addEventListener('click', () => {
-      let categoryId = parseInt(gameButton.getAttribute('data-id'))
-      fetchQuestions(categoryId);
+      let categoryId = parseInt(gameButton.getAttribute('data-id'));
+      let counter = gameButton.getAttribute('data-counter');
+      fetchQuestions(categoryId, counter);
     });
   }
   )
@@ -38,38 +26,60 @@ function eventListeners() {
   replay.addEventListener('click', restartGame);
 }
 
-function fetchQuestions(id) {
+function fetchQuestions(id, counter) {
   return fetch(`https://opentdb.com/api.php?amount=10&category=${id}&difficulty=medium&type=multiple`)
   .then(resp => resp.json())
-  .then(result => showQuestions(result.results[0]))
+  .then(req => displayQuestions(req.results, counter))
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   eventListeners();
-  fetchQuestions();
   score.textContent = correctScore;
   noOfQuestions.textContent = `/${totalQuestions}`;
 })
 
-function showQuestions(data) {
-  correctAnswer = data.correct_answer;
-  let incorrectAnswer = data.incorrect_answers;
+function displayQuestions(data, i) {
+  correctAnswer = data[i].correct_answer;
+  let incorrectAnswer = data[i].incorrect_answers;
   let optionsList = incorrectAnswer;
   optionsList.splice(Math.floor(Math.random() * (incorrectAnswer.length + 1)), 0, correctAnswer);
 
-  question.textContent = `${data.question}`;
+  question.textContent = HTMLDecode(data[i].question);
   quizOptions.innerHTML = `
-        ${optionsList.map((option, index) => `
-            <li> ${index + 1}. <span>${option}</span> </li>
-        `).join('')}
-    `;
-    selectOption();
+      ${optionsList.map((option, index) => `
+          <li> ${index + 1}. <span>${option}</span> </li>
+      `).join('')}
+  `;
+  selectOption();
+  next.addEventListener('click', () => {
+    i++;
+    if(i < data.length){
+      correctAnswer = data[i].correct_answer;
+      let incorrectAnswer = data[i].incorrect_answers;
+      let optionsList = incorrectAnswer;
+      optionsList.splice(Math.floor(Math.random() * (incorrectAnswer.length + 1)), 0, correctAnswer);
+
+      question.textContent = HTMLDecode(data[i].question);
+      quizOptions.innerHTML = `
+      ${optionsList.map((option, index) => `
+          <li> ${index + 1}. <span>${option}</span> </li>
+      `).join('')}
+  `;
+      selectOption();
+    } else {
+
+    }
+  });
+}
+
+function HTMLDecode(textString) {
+  let doc = new DOMParser().parseFromString(textString, "text/html");
+  return doc.documentElement.textContent;
 }
 
 function selectOption() {
   quizOptions.querySelectorAll('li').forEach(
     option => option.addEventListener('click', () => {
-      // console.log('Option clicked');
       if (quizOptions.querySelector('.selected')) {
         const activeOption = quizOptions.querySelector('.selected');
         activeOption.classList.remove('selected');
@@ -86,6 +96,9 @@ function checkAnswer() {
 function restartGame() {
   console.log('Restarting game...');
 }
+
+
+
 
 // var counter = document.getElementById('counter').getContext('2d');
 // var no = 10;
@@ -113,7 +126,6 @@ function restartGame() {
 //         counter.fillRect(0, 0, cw, ch);
 //         counter.fillStyle = '#000';
 //         counter.fillText('Times up', 100, 110);
-        
 //     }
 //     no--;
 // }

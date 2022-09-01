@@ -24,9 +24,9 @@
       <h2>Test your brain power</h2>
       <p>Select a category</p>
       <div id="category-container">
-        <button type="button" data-id= "18" data-toggle="modal" data-target="#gameModalCenter">Science: Computers</button>
-        <button type="button" data-id= "9" data-toggle="modal" data-target="#gameModalCenter">General Knowledge</button>
-        <button type="button" data-id= "15" data-toggle="modal" data-target="#gameModalCenter">Entertainment: Video Games</button>
+        <button type="button" data-counter="0" data-id= "18" data-toggle="modal" data-target="#gameModalCenter">Science: Computers</button>
+        <button type="button" data-counter="0" data-id= "9" data-toggle="modal" data-target="#gameModalCenter">General Knowledge</button>
+        <button type="button" data-counter="0" data-id= "15" data-toggle="modal" data-target="#gameModalCenter">Entertainment: Video Games</button>
       </div>
     </footer>
     <!-- Modal -->
@@ -42,15 +42,16 @@
           </div>
           <div class="modal-body">
             <ul class="quiz-options">
-              
+
             </ul>
             <div id="result">
-              <p></p>
+
             </div>
           </div>
           <div class="quiz-footer">
             <button type="button" id="check-answer">Check Answer</button>
             <button type="button" id="play-again">Play Again!</button>
+            <button type="button" id="next">></button>
           </div>
         </div>
       </div>

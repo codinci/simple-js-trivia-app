@@ -13,27 +13,79 @@
 //     id: 15
 //   }
 // ]
-
+const question = document.getElementById('quiz_question');
+const score = document.getElementById('correct-score');
+const noOfQuestions = document.getElementById('total-questions');
+const verifyAnswer = document.getElementById('check-answer');
+const replay = document.getElementById('play-again');
+const quizOptions = document.querySelector('.quiz-options');
+const result = document.getElementById('result');
 const gameButtons = document.querySelectorAll('#category-container button');
-Array.from(gameButtons).forEach(gameButton => {
+
+let correctAnswer = "";
+let correctScore = askedCount = 0;
+let totalQuestions = 10;
+
+function eventListeners() {
+  Array.from(gameButtons).forEach(gameButton => {
     gameButton.addEventListener('click', () => {
       let categoryId = parseInt(gameButton.getAttribute('data-id'))
-      fetchCategoryResults(categoryId);
+      fetchQuestions(categoryId);
     });
   }
-)
+  )
+  verifyAnswer.addEventListener('click', checkAnswer);
+  replay.addEventListener('click', restartGame);
+}
 
-function fetchCategoryResults(id) {
+function fetchQuestions(id) {
   return fetch(`https://opentdb.com/api.php?amount=10&category=${id}&difficulty=medium&type=multiple`)
   .then(resp => resp.json())
-  .then(result => console.log(result))
+  .then(result => showQuestions(result.results[0]))
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  
-  
+  eventListeners();
+  fetchQuestions();
+  score.textContent = correctScore;
+  noOfQuestions.textContent = `/${totalQuestions}`;
 })
 
+function showQuestions(data) {
+  correctAnswer = data.correct_answer;
+  let incorrectAnswer = data.incorrect_answers;
+  let optionsList = incorrectAnswer;
+  optionsList.splice(Math.floor(Math.random() * (incorrectAnswer.length + 1)), 0, correctAnswer);
+
+  question.textContent = `${data.question}`;
+  quizOptions.innerHTML = `
+        ${optionsList.map((option, index) => `
+            <li> ${index + 1}. <span>${option}</span> </li>
+        `).join('')}
+    `;
+    selectOption();
+}
+
+function selectOption() {
+  quizOptions.querySelectorAll('li').forEach(
+    option => option.addEventListener('click', () => {
+      // console.log('Option clicked');
+      if (quizOptions.querySelector('.selected')) {
+        const activeOption = quizOptions.querySelector('.selected');
+        activeOption.classList.remove('selected');
+      }
+      option.classList.add('selected');
+    })
+  )
+}
+
+function checkAnswer() {
+  console.log('Checking Answer...');
+}
+
+function restartGame() {
+  console.log('Restarting game...');
+}
 
 // var counter = document.getElementById('counter').getContext('2d');
 // var no = 10;

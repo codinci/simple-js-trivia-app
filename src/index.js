@@ -1,4 +1,38 @@
-console.log('I can see the index.js');
+// console.log('I can see the index.js');
+// const category = [
+//   {
+//     name: 'Science: Computers',
+//     id: 18
+//   },
+//   {
+//     name: 'General Knowledge',
+//     id: 9
+//   },
+//   {
+//     name: 'Entertainment: Video Games',
+//     id: 15
+//   }
+// ]
+
+const gameButtons = document.querySelectorAll('#category-container button');
+Array.from(gameButtons).forEach(gameButton => {
+    gameButton.addEventListener('click', () => {
+      let categoryId = parseInt(gameButton.getAttribute('data-id'))
+      fetchCategoryResults(categoryId);
+    });
+  }
+)
+
+function fetchCategoryResults(id) {
+  return fetch(`https://opentdb.com/api.php?amount=10&category=${id}&difficulty=medium&type=multiple`)
+  .then(resp => resp.json())
+  .then(result => console.log(result))
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  
+  
+})
 
 
 // var counter = document.getElementById('counter').getContext('2d');

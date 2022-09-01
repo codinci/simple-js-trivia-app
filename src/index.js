@@ -12,7 +12,9 @@ let correctAnswer = "";
 let correctScore = 0;
 let totalQuestions = 10;
 
-
+/**
+ * Various button event listeners
+ */
 function eventListeners() {
   Array.from(gameButtons).forEach(gameButton => {
     gameButton.addEventListener('click', () => {
@@ -26,10 +28,17 @@ function eventListeners() {
   replay.addEventListener('click', restartGame);
 }
 
+/**
+ *
+ * @param {number} id
+ * @param {number} counter
+ * @returns response from the server
+ */
 function fetchQuestions(id, counter) {
   return fetch(`https://opentdb.com/api.php?amount=10&category=${id}&difficulty=medium&type=multiple`)
   .then(resp => resp.json())
   .then(req => displayQuestions(req.results, counter))
+  .catch(err => console.log(err))
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -38,6 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
   noOfQuestions.textContent = `/${totalQuestions}`;
 })
 
+/**
+ * Returns the questions and choices for each question
+ * based on its category
+ * @param {object} data
+ * @param {number} i
+ */
 function displayQuestions(data, i) {
   correctAnswer = data[i].correct_answer;
   let incorrectAnswer = data[i].incorrect_answers;
@@ -72,11 +87,19 @@ function displayQuestions(data, i) {
   });
 }
 
+/**
+ *
+ * @param {string} textString
+ * @returns a valid text/html text
+ */
 function HTMLDecode(textString) {
   let doc = new DOMParser().parseFromString(textString, "text/html");
   return doc.documentElement.textContent;
 }
 
+/**
+ * Returns a styled option
+ */
 function selectOption() {
   quizOptions.querySelectorAll('li').forEach(
     option => option.addEventListener('click', () => {
@@ -89,10 +112,12 @@ function selectOption() {
   )
 }
 
+//TODO: Check answer versus user selected answer
 function checkAnswer() {
   console.log('Checking Answer...');
 }
 
+//TODO: Restart the game when all 10 questions are asked
 function restartGame() {
   console.log('Restarting game...');
 }

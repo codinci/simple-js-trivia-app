@@ -66,8 +66,11 @@ function displayQuestions(data, i) {
       `).join('')}
   `;
   selectOption();
+
+
   next.addEventListener('click', () => {
     i++;
+    result.innerHTML = '';
     if(i < data.length){
       correctAnswer = data[i].correct_answer;
       let incorrectAnswer = data[i].incorrect_answers;
@@ -78,11 +81,9 @@ function displayQuestions(data, i) {
       quizOptions.innerHTML = `
       ${optionsList.map((option, index) => `
           <li> ${index + 1}. <span>${option}</span> </li>
-      `).join('')}
-  `;
+        `).join('')}
+      `;
       selectOption();
-    } else {
-
     }
   });
 }
@@ -114,7 +115,19 @@ function selectOption() {
 
 //TODO: Check answer versus user selected answer
 function checkAnswer() {
-  console.log('Checking Answer...');
+  // verifyAnswer.disabled = true;
+  if(quizOptions.querySelector('.selected')) {
+    let selectedAnswer = quizOptions.querySelector('.selected span').textContent;
+    console.log(correctAnswer);
+    if(selectedAnswer == HTMLDecode(correctAnswer)) {
+      correctScore ++;
+      result.innerHTML = `<p><i class="fas fa-check"></i>Correct!<p>`;
+    } else {
+      result.innerHTML = `<p><i class="fas fa-times"></i>Incorrect!<p><small><b>Correct Answer: </b>${correctAnswer}</small>`;
+    }
+  } else {
+    result.innerHTML = `<p><i class="fas fa-question"></i>Please Select an Option!<p>`;
+  }
 }
 
 //TODO: Restart the game when all 10 questions are asked

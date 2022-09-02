@@ -11,6 +11,8 @@ const next = document.getElementById('next');
 let correctAnswer = "";
 let correctScore = 0;
 let totalQuestions = 10;
+let i = 0;
+
 
 /**
  * Various button event listeners
@@ -19,14 +21,12 @@ function eventListeners() {
   Array.from(gameButtons).forEach(gameButton => {
     gameButton.addEventListener('click', () => {
       let categoryId = parseInt(gameButton.getAttribute('data-id'));
-      let counter = gameButton.getAttribute('data-counter');
       correctScore = 0;
       score.textContent = correctScore;
       result.textContent = '';
-      fetchQuestions(categoryId, counter);
+      fetchQuestions(categoryId);
     });
-  }
-  )
+  })
   verifyAnswer.addEventListener('click', checkAnswer);
   replay.addEventListener('click', restartGame);
 }
@@ -37,15 +37,17 @@ function eventListeners() {
  * @param {number} counter
  * @returns response from the server
  */
-function fetchQuestions(id, counter) {
+function fetchQuestions(id) {
+  let counter = 0;
   return fetch(`https://opentdb.com/api.php?amount=10&category=${id}&difficulty=medium&type=multiple`)
   .then(resp => resp.json())
-  .then(req => displayQuestions(req.results, counter))
+  .then(req => displayQuestions(req.results))
   .catch(err => console.log(err))
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   eventListeners();
+  fetchQuestions();
   score.textContent = correctScore;
   noOfQuestions.textContent = `/${totalQuestions}`;
 })
@@ -56,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {object} data
  * @param {number} i
  */
-function displayQuestions(data, i) {
+function displayQuestions(data) {
   correctAnswer = data[i].correct_answer;
   let incorrectAnswer = data[i].incorrect_answers;
   let optionsList = incorrectAnswer;
@@ -70,25 +72,36 @@ function displayQuestions(data, i) {
   `;
   selectOption();
 
-
   next.addEventListener('click', () => {
-    i++;
-    result.innerHTML = '';
-    if(i < data.length){
-      correctAnswer = data[i].correct_answer;
-      let incorrectAnswer = data[i].incorrect_answers;
-      let optionsList = incorrectAnswer;
-      optionsList.splice(Math.floor(Math.random() * (incorrectAnswer.length + 1)), 0, correctAnswer);
+    if (!quizOptions.querySelector('.selected')) {
+      next.disabled = true;
+      result.innerHTML = `<p><i class="fas fa-question"></i>Please Select an Option!<p>`;
+    } else {
+      i++;
+      result.innerHTML = '';
+        if (i < data.length) {
+          correctAnswer = data[i].correct_answer;
+          let incorrectAnswer = data[i].incorrect_answers;
+          let optionsList = incorrectAnswer;
+          optionsList.splice(Math.floor(Math.random() * (incorrectAnswer.length + 1)), 0, correctAnswer);
 
-      question.textContent = HTMLDecode(data[i].question);
-      quizOptions.innerHTML = `
-      ${optionsList.map((option, index) => `
-          <li> ${index + 1}. <span>${option}</span> </li>
-        `).join('')}
-      `;
-      selectOption();
+          question.textContent = HTMLDecode(data[i].question);
+          quizOptions.innerHTML = `
+          ${optionsList.map((option, index) => `
+              <li> ${index + 1}. <span>${option}</span> </li>
+            `).join('')}
+          `;
+          selectOption();
+      } else {
+        restartGame();
+      }
     }
   });
+
+  // next.addEventListener('click', () => {
+  //   i++;
+  //   result.innerHTML = '';
+  //   
 }
 
 /**
@@ -99,6 +112,11 @@ function displayQuestions(data, i) {
 function HTMLDecode(textString) {
   let doc = new DOMParser().parseFromString(textString, "text/html");
   return doc.documentElement.textContent;
+}
+
+function nextQuestion() {
+  // console.log(i++);
+  
 }
 
 /**
@@ -112,15 +130,20 @@ function selectOption() {
         activeOption.classList.remove('selected');
       }
       option.classList.add('selected');
+      next.disabled = false;
     })
   )
 }
 
-//TODO: Check answer versus user selected answer
+/**
+ * Queries the selected option and checks if its correct
+ * Updates user score if the option is correct
+ */
 function checkAnswer() {
   // verifyAnswer.disabled = true;
   // console.log(correctAnswer);
   if(quizOptions.querySelector('.selected')) {
+
     let selectedAnswer = quizOptions.querySelector('.selected span').textContent;
 
     if(selectedAnswer == HTMLDecode(correctAnswer)) {

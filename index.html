@@ -25,13 +25,13 @@
       <h2>Test your brain power</h2>
       <p>Select a category</p>
       <div id="category-container">
-        <button type="button" data-counter="0" data-id= "18" data-toggle="modal" data-target="#gameModalCenter">Science: Computers</button>
-        <button type="button" data-counter="0" data-id= "9" data-toggle="modal" data-target="#gameModalCenter">General Knowledge</button>
-        <button type="button" data-counter="0" data-id= "15" data-toggle="modal" data-target="#gameModalCenter">Entertainment: Video Games</button>
+        <button type="button" data-counter="0" data-id= "18" data-toggle="modal" data-target="#game-modal">Science: Computers</button>
+        <button type="button" data-counter="0" data-id= "9" data-toggle="modal" data-target="#game-modal">General Knowledge</button>
+        <button type="button" data-counter="0" data-id= "15" data-toggle="modal" data-target="#game-modal">Entertainment: Video Games</button>
       </div>
     </footer>
     <!-- Modal -->
-    <div class="modal fade bd-example-modal-lg" id="gameModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    <div class="modal fade bd-example-modal-lg" id="game-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
       aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -51,7 +51,7 @@
           </div>
           <div class="quiz-footer">
             <button type="button" id="check-answer">Check Answer</button>
-            <button type="button" id="play-again">Play Again!</button>
+            <button type="button" id="play-again" data-dismiss="modal">play Again!</button>
             <button type="button" id="next">></button>
           </div>
         </div>

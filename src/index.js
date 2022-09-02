@@ -23,12 +23,12 @@ function eventListeners() {
       let categoryId = parseInt(gameButton.getAttribute('data-id'));
       correctScore = 0;
       score.textContent = correctScore;
+      noOfQuestions.textContent = `/${totalQuestions}`;
       result.textContent = '';
       fetchQuestions(categoryId);
     });
   })
   verifyAnswer.addEventListener('click', checkAnswer);
-  replay.addEventListener('click', restartGame);
 }
 
 /**
@@ -38,7 +38,6 @@ function eventListeners() {
  * @returns response from the server
  */
 function fetchQuestions(id) {
-  let counter = 0;
   return fetch(`https://opentdb.com/api.php?amount=10&category=${id}&difficulty=medium&type=multiple`)
   .then(resp => resp.json())
   .then(req => displayQuestions(req.results))
@@ -48,8 +47,6 @@ function fetchQuestions(id) {
 document.addEventListener('DOMContentLoaded', () => {
   eventListeners();
   fetchQuestions();
-  score.textContent = correctScore;
-  noOfQuestions.textContent = `/${totalQuestions}`;
 })
 
 /**
@@ -59,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {number} i
  */
 function displayQuestions(data) {
+  result.innerHTML = '';
   correctAnswer = data[i].correct_answer;
   let incorrectAnswer = data[i].incorrect_answers;
   let optionsList = incorrectAnswer;
@@ -77,6 +75,7 @@ function displayQuestions(data) {
       next.disabled = true;
       result.innerHTML = `<p><i class="fas fa-question"></i>Please Select an Option!<p>`;
     } else {
+      checkAnswer();
       i++;
       result.innerHTML = '';
         if (i < data.length) {
@@ -97,11 +96,6 @@ function displayQuestions(data) {
       }
     }
   });
-
-  // next.addEventListener('click', () => {
-  //   i++;
-  //   result.innerHTML = '';
-  //   
 }
 
 /**
@@ -112,11 +106,6 @@ function displayQuestions(data) {
 function HTMLDecode(textString) {
   let doc = new DOMParser().parseFromString(textString, "text/html");
   return doc.documentElement.textContent;
-}
-
-function nextQuestion() {
-  // console.log(i++);
-  
 }
 
 /**
@@ -161,7 +150,10 @@ function checkAnswer() {
 
 //TODO: Restart the game when all 10 questions are asked
 function restartGame() {
-  console.log('Restarting game...');
+  verifyAnswer.style.display = 'none';
+  next.style.display = 'none';
+  replay.style.display ='block';
+  result.innerHTML = `<h2>Game Ended</h2><p>Final score: ${correctScore}/ ${totalQuestions}</p>`
 }
 
 

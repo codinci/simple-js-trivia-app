@@ -20,6 +20,9 @@ function eventListeners() {
     gameButton.addEventListener('click', () => {
       let categoryId = parseInt(gameButton.getAttribute('data-id'));
       let counter = gameButton.getAttribute('data-counter');
+      correctScore = 0;
+      score.textContent = correctScore;
+      result.textContent = '';
       fetchQuestions(categoryId, counter);
     });
   }
@@ -116,11 +119,14 @@ function selectOption() {
 //TODO: Check answer versus user selected answer
 function checkAnswer() {
   // verifyAnswer.disabled = true;
+  // console.log(correctAnswer);
   if(quizOptions.querySelector('.selected')) {
     let selectedAnswer = quizOptions.querySelector('.selected span').textContent;
-    console.log(correctAnswer);
+
     if(selectedAnswer == HTMLDecode(correctAnswer)) {
       correctScore ++;
+      // console.log(correctScore);
+      score.textContent = correctScore
       result.innerHTML = `<p><i class="fas fa-check"></i>Correct!<p>`;
     } else {
       result.innerHTML = `<p><i class="fas fa-times"></i>Incorrect!<p><small><b>Correct Answer: </b>${correctAnswer}</small>`;

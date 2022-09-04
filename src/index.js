@@ -50,11 +50,19 @@ function retrievedQuestions(data) {
   displayQuestions(question);
 
   next.addEventListener('click', () => {
-    if (i < data.length -1) {
-      displayQuestions(data[++i]);
-    } else {
-      console.log('The end...')
-    }
+     if (!quizOptions.querySelector('.selected')) {
+      next.disabled = true;
+      result.innerHTML = `<p><i class="fas fa-question"></i>Please Select an Option!<p>`;
+     } else {
+       checkAnswer();
+       if (i < data.length - 1) {
+         displayQuestions(data[++i]);
+       } else {
+         console.log('The end...')
+       }
+
+     }
+    
   })
 }
 

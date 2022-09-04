@@ -11,13 +11,9 @@ const next = document.getElementById('next');
 let correctAnswer = "";
 let correctScore = 0;
 let totalQuestions = 10;
-let i = 0;
 
 
-/**
- * Various button event listeners
- */
-function eventListeners() {
+document.addEventListener('DOMContentLoaded', () => {
   Array.from(gameButtons).forEach(gameButton => {
     gameButton.addEventListener('click', () => {
       let categoryId = parseInt(gameButton.getAttribute('data-id'));
@@ -29,7 +25,7 @@ function eventListeners() {
     });
   })
   verifyAnswer.addEventListener('click', checkAnswer);
-}
+})
 
 /**
  *
@@ -38,16 +34,29 @@ function eventListeners() {
  * @returns response from the server
  */
 function fetchQuestions(id) {
+  verifyAnswer.style.display = 'block';
+  next.style.display = 'block';
+  replay.style.display = 'none';
   return fetch(`https://opentdb.com/api.php?amount=10&category=${id}&difficulty=medium&type=multiple`)
   .then(resp => resp.json())
-  .then(req => displayQuestions(req.results))
+  .then(req => retrievedQuestions(req.results))
   .catch(err => console.log(err))
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  eventListeners();
-  fetchQuestions();
-})
+
+function retrievedQuestions(data) {
+  let i = 0;
+  let question = data[i];
+  displayQuestions(question);
+
+  next.addEventListener('click', () => {
+    if (i < data.length -1) {
+      displayQuestions(data[++i]);
+    } else {
+      console.log('The end...')
+    }
+  })
+}
 
 /**
  * Returns the questions and choices for each question
@@ -56,13 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {number} i
  */
 function displayQuestions(data) {
+  console.log(data);
   result.innerHTML = '';
-  correctAnswer = data[i].correct_answer;
-  let incorrectAnswer = data[i].incorrect_answers;
+  correctAnswer = data.correct_answer;
+  let incorrectAnswer = data.incorrect_answers;
   let optionsList = incorrectAnswer;
   optionsList.splice(Math.floor(Math.random() * (incorrectAnswer.length + 1)), 0, correctAnswer);
 
-  question.textContent = HTMLDecode(data[i].question);
+  question.textContent = HTMLDecode(data.question);
   quizOptions.innerHTML = `
       ${optionsList.map((option, index) => `
           <li> ${index + 1}. <span>${option}</span> </li>
@@ -70,32 +80,32 @@ function displayQuestions(data) {
   `;
   selectOption();
 
-  next.addEventListener('click', () => {
-    if (!quizOptions.querySelector('.selected')) {
-      next.disabled = true;
-      result.innerHTML = `<p><i class="fas fa-question"></i>Please Select an Option!<p>`;
-    } else {
-      checkAnswer();
-      i++;
-      result.innerHTML = '';
-        if (i < data.length) {
-          correctAnswer = data[i].correct_answer;
-          let incorrectAnswer = data[i].incorrect_answers;
-          let optionsList = incorrectAnswer;
-          optionsList.splice(Math.floor(Math.random() * (incorrectAnswer.length + 1)), 0, correctAnswer);
+  // next.addEventListener('click', () => {
+  //   if (!quizOptions.querySelector('.selected')) {
+  //     next.disabled = true;
+  //     result.innerHTML = `<p><i class="fas fa-question"></i>Please Select an Option!<p>`;
+  //   } else {
+  //     checkAnswer();
+  //     i++;
+  //     result.innerHTML = '';
+  //     if (i < data.length) {
+  //       correctAnswer = data[i].correct_answer;
+  //       let incorrectAnswer = data[i].incorrect_answers;
+  //       let optionsList = incorrectAnswer;
+  //       optionsList.splice(Math.floor(Math.random() * (incorrectAnswer.length + 1)), 0, correctAnswer);
 
-          question.textContent = HTMLDecode(data[i].question);
-          quizOptions.innerHTML = `
-          ${optionsList.map((option, index) => `
-              <li> ${index + 1}. <span>${option}</span> </li>
-            `).join('')}
-          `;
-          selectOption();
-      } else {
-        restartGame();
-      }
-    }
-  });
+  //       question.textContent = HTMLDecode(data[i].question);
+  //       quizOptions.innerHTML = `
+  //         ${optionsList.map((option, index) => `
+  //             <li> ${index + 1}. <span>${option}</span> </li>
+  //           `).join('')}
+  //         `;
+  //       selectOption();
+  //     } else {
+  //       restartGame();
+  //     }
+  //   }
+  // });
 }
 
 /**
@@ -148,7 +158,7 @@ function checkAnswer() {
   }
 }
 
-//TODO: Restart the game when all 10 questions are asked
+
 function restartGame() {
   verifyAnswer.style.display = 'none';
   next.style.display = 'none';

@@ -17,6 +17,9 @@ The technologies are:
 <li>JavaScript</li>
 </ol>
 
+### Api Used
+<https://opentdb.com/api.php?amount=10&difficulty=medium&type=multiple> <br>
+
 ## Demo
 
 Use the link provided to navigate to the Trivia Play website.

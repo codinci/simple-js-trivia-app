@@ -7,7 +7,7 @@ The significance of this project is:
 <li>The user is given 10 questions per category and given an overall result on the category of their choosing</li>
 <li>The user can view the correct answer on getting it wrong.</li>
 </ol>
-### Technology Used
+## Technology Used
 
 Several technologies have been used in the design and implementation of this website.
 The technologies are:
